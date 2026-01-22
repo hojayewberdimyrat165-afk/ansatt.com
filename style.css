@@ -1,70 +1,104 @@
-body{
-  margin:0;
-  background:#eafff2;
-  font-family:Arial, sans-serif;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eafff3;
 }
 
-.app{
-  text-align:center;
-  padding:30px 15px;
+.app {
+    max-width: 430px;
+    margin: auto;
+    padding: 20px;
 }
 
-.logo{
-  width:140px;
-  margin-top:20px;
+.logo-box {
+    text-align: center;
 }
 
-.from{
-  font-size:14px;
-  color:#2e7d32;
-  margin-bottom:10px;
+.logo {
+    width: 120px;
 }
 
-.slogan{
-  font-size:16px;
-  color:#1b5e20;
-  margin-bottom:30px;
+h1 {
+    margin: 10px 0 0;
 }
 
-.btn{
-  width:90%;
-  max-width:340px;
-  padding:16px;
-  border:none;
-  border-radius:14px;
-  font-size:18px;
-  color:white;
-  margin:10px auto;
-  display:block;
+.slogan {
+    color: #2b8c5c;
+    margin-top: 5px;
 }
 
-.send{
-  background:#18a558;
+.balance-box {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
 }
 
-.load{
-  background:#2d8cff;
+.balance-box h2 {
+    margin: 10px 0;
+    font-size: 28px;
 }
 
-.cards{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-  margin-top:30px;
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.card{
-  background:#f0fff7;
-  padding:20px;
-  border-radius:14px;
-  font-size:16px;
-  color:#1b5e20;
+.btn {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 16px;
+    color: white;
 }
 
-.footer{
-  background:#18a558;
-  color:white;
-  text-align:center;
-  padding:15px;
-  font-size:14px;
+.green {
+    background: #19a55b;
+}
+
+.blue {
+    background: #2d8cff;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.fancy {
+    background: linear-gradient(135deg, #ffffff, #e6fff1);
+    border: 1px solid #bff2d5;
+    transition: 0.2s;
+}
+
+.fancy .icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.fancy:active {
+    transform: scale(0.96);
+    background: linear-gradient(135deg, #d9ffe9, #b8f5d4);
+}
+
+.footer {
+    margin-top: 25px;
+    background: #19a55b;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 12px;
 }
