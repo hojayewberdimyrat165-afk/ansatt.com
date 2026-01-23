@@ -1,78 +1,58 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tk">
 <head>
 <meta charset="UTF-8">
+<title>Añsatt Töleg</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Añsatt</title>
-
-<style>
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#eafff3;
-    text-align:center;
-}
-
-/* Logo */
-.logo-box{
-    margin-top:40px;
-}
-.logo-box img{
-    width:200px;
-}
-
-/* Butonlar */
-.menu{
-    margin-top:30px;
-}
-.menu a{
-    display:block;
-    width:85%;
-    max-width:400px;
-    margin:15px auto;
-    padding:16px;
-    background:#2da36a;
-    color:white;
-    text-decoration:none;
-    font-size:18px;
-    font-weight:bold;
-    border-radius:12px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-.menu a:hover{
-    background:#25945f;
-}
-
-/* Footer */
-.footer{
-    margin-top:40px;
-    font-size:14px;
-    color:#333;
-}
-.footer div{
-    margin:8px;
-}
-</style>
+<link rel="stylesheet" href="stil.css">
 </head>
-
 <body>
 
-<div class="logo-box">
-    <img src="logo.png">
+<div class="card">
+    <h2>Añsatt Töleg</h2>
+
+    <input type="tel" id="phone" placeholder="+993 Telefon belgiňiz">
+    <input type="number" id="amount" placeholder="Manat">
+
+    <select id="country">
+        <option value="ru">🇷🇺 Russiýa (RUB)</option>
+        <option value="tr">🇹🇷 Türkiýe (TL)</option>
+    </select>
+
+    <div class="result" id="result">Jemi töleg: —</div>
+
+    <button onclick="calculate()">Töle</button>
 </div>
 
-<div class="menu">
-    <a href="kart.html">💳 Karttan Telefona</a>
-    <a href="phone.html">📱 Telefondan Telefona</a>
-    <a href="wifi.html">📡 Wi-Fi & Mobil Balans</a>
-</div>
+<script>
+function calculate() {
+    let manat = document.getElementById("amount").value;
+    let country = document.getElementById("country").value;
 
-<div class="footer">
-    <div>📞 +7 902 388-95-02</div>
-    <div>✉️ hojayewberdimyrat165@gmail.com</div>
-    <div>WhatsApp · Telegram · VK</div>
-</div>
+    if (manat === "") {
+        alert("Mukdary giriziň");
+        return;
+    }
+
+    let rate;
+    let currency;
+
+    if (country === "ru") {
+        rate = 3.2; // 1 manat = 3.2 RUB (örnek)
+        currency = "₽";
+    } else {
+        rate = 1.8; // 1 manat = 1.8 TL (örnek)
+        currency = "₺";
+    }
+
+    let commission = 0.03; // %3 komisyon
+    let total = manat * rate;
+    let final = total + (total * commission);
+
+    document.getElementById("result").innerText =
+        "Jemi töleg: " + final.toFixed(2) + " " + currency;
+}
+</script>
 
 </body>
 </html>
