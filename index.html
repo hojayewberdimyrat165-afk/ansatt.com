@@ -1,47 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-  <title>Aňsatt</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Añsatt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#eafff3;
+    text-align:center;
+}
+
+.logo-box{
+    margin-top:40px;
+}
+
+.logo-box img{
+    width:140px;
+}
+
+.logo-text{
+    font-size:26px;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.logo-sub{
+    color:#555;
+    font-size:14px;
+}
+
+.btn{
+    width:85%;
+    max-width:400px;
+    background:#1f9d5c;
+    color:white;
+    border:none;
+    padding:18px;
+    font-size:18px;
+    border-radius:14px;
+    margin:12px auto;
+    display:block;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#17824c;
+}
+
+.footer{
+    margin-top:40px;
+    color:#333;
+    font-size:15px;
+}
+
+.footer div{
+    margin:8px;
+}
+</style>
 </head>
-<body style="font-family:sans-serif;text-align:center;padding:20px">
 
-<h1>Aňsatt</h1>
+<body>
 
-<input id="phone" placeholder="TM Cell numara" style="width:90%;padding:10px"><br><br>
+<div class="logo-box">
+    <img src="logo.png">
+    <div class="logo-text">Añsatt</div>
+    <div class="logo-sub">from hojayev</div>
+</div>
 
-<input id="amount" placeholder="Tutar (TMT)" type="number" style="width:90%;padding:10px"><br><br>
+<br>
 
-<select id="currency">
-  <option value="TRY">TL</option>
-  <option value="RUB">RUB</option>
-</select><br><br>
+<button class="btn" onclick="location.href='kart.html'">💳 Kartdan Telefona</button>
+<button class="btn" onclick="location.href='telefon.html'">📱 Telefondan Telefona</button>
+<button class="btn" onclick="location.href='wifi.html'">📡 Wi-Fi & Mobil Balans</button>
 
-<button onclick="calculate()">Hesapla</button>
-
-<h2 id="price"></h2>
-
-<button id="pay" style="display:none" onclick="pay()">Öde</button>
-
-<script>
-async function calculate(){
-  let phone = phone.value;
-  let amount = amount.value;
-  let currency = document.getElementById("currency").value;
-
-  let res = await fetch("https://YOUR_WORKER_URL/calc?amount="+amount+"&currency="+currency);
-  let data = await res.json();
-
-  window.payUrl = data.payUrl;
-
-  document.getElementById("price").innerText = "Ödenecek: " + data.price + " " + currency;
-  document.getElementById("pay").style.display = "block";
-}
-
-function pay(){
-  window.location.href = window.payUrl;
-}
-</script>
+<div class="footer">
+    <div>📞 +7 902 388-95-02</div>
+    <div>✉ hojayewberdimyrat165@gmail.com</div>
+    <div>WhatsApp · Telegram · VK</div>
+</div>
 
 </body>
 </html>
