@@ -2,15 +2,15 @@
 <html lang="tk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aňsatt Töleg</title>
-
+<title>Añsatt Töleg</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
     margin:0;
     font-family:Arial, sans-serif;
     background:#eafff3;
     text-align:center;
+    padding:20px;
 }
 
 .container{
@@ -53,75 +53,86 @@ button{
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
-<h2>Aňsatt Töleg</h2>
+  <h2>Añsatt Töleg</h2>
 
-<input id="phone" placeholder="+993 Telefon belgiňiz">
-<input id="amount" type="number" placeholder="Ugradyljak mukdar TMT">
+  <!-- Telefon numarası -->
+  <input id="phone" placeholder="+993 Telefon belgiňiz">
 
-<select id="country" onchange="updateBanks();calculate();">
-<option value="tm">🇹🇲 Türkmenistan</option>
-<option value="ru">🇷🇺 Russiýa</option>
-<option value="tr">🇹🇷 Türkiýe</option>
-</select>
+  <!-- Gönderilecek miktar -->
+  <input id="amount" type="number" placeholder="Ugradyljak mukdar">
 
-<select id="bank"></select>
+  <!-- Ülke seçimi -->
+  <select id="country">
+    <option value="ru">🇷🇺 Russiýa</option>
+    <option value="tr">🇹🇷 Türkiýe</option>
+  </select>
 
-<div class="total" id="total">Tölenmeli: 0</div>
+  <!-- Sonuç gösterimi -->
+  <div class="total" id="total">Tölenmeli: —</div>
 
-<button onclick="pay()">Töle</button>
+  <!-- Öde butonu -->
+  <button onclick="pay()">Töle</button>
 </div>
 
 <script>
-const rateTM = 5.8;
-const rateRU = 0.33;
-const commission = 0.03;
+// Buradaki değerleri ileride canlı kur / DoctorSIM fiyatı ile güncelleyebilirsin.
+const doctorUSDperTMT = 0.055; // örnek: 1 Manat = 0.055 USD, gerçek değer güncellenmeli
+const commission = 0.03;      // %3
 
-const banks = {
-    tm: ["TM Cell", "Agrobank", "Senagat Bank", "Halkbank"],
-    ru: ["Tinkoff", "Sberbank", "SBP (Telefon arkaly)", "Alfa Bank", "VTB"],
-    tr: ["Ziraat", "Garanti", "Papara", "FAST", "Akbank"]
-};
+const amountInput = document.getElementById('amount');
+const countrySelect = document.getElementById('country');
+const totalDiv = document.getElementById('total');
 
-function updateBanks(){
-    let country = document.getElementById("country").value;
-    let bankSelect = document.getElementById("bank");
-    bankSelect.innerHTML = "";
+// Her miktar, ülke değiştiğinde otomatik hesapla
+amountInput.addEventListener('input', calculate);
+countrySelect.addEventListener('change', calculate);
 
-    banks[country].forEach(bank=>{
-        let opt = document.createElement("option");
-        opt.text = bank;
-        bankSelect.add(opt);
+function calculate(){
+  const amount = parseFloat(amountInput.value || 0);
+  const country = countrySelect.value;
+
+  if(amount <= 0){
+    totalDiv.innerText = "Tölenmeli: —";
+    return;
+  }
+
+  // Önce USD cinsine çevir
+  const usd = amount * doctorUSDperTMT * (1 + commission);
+
+  // Kur API'si ile TL veya RUB'e çevir
+  fetch("https://api.exchangerate.host/latest?base=USD")
+    .then(res => res.json())
+    .then(data => {
+      if(country === "ru"){
+        const rubRate = data.rates.RUB;
+        const rubTotal = usd * rubRate;
+        totalDiv.innerHTML = "Tölenmeli: <b>" + rubTotal.toFixed(2) + " RUB</b>";
+      } else if(country === "tr"){
+        const tlRate = data.rates.TRY;
+        const tlTotal = usd * tlRate;
+        totalDiv.innerHTML = "Tölenmeli: <b>" + tlTotal.toFixed(2) + " TL</b>";
+      } else {
+        totalDiv.innerText = "Tölenmeli: —";
+      }
+    })
+    .catch(err => {
+      // API çalışmazsa, sadece USD bilgisiyle gösterme (opsiyonel)
+      console.error("Kur alırken hata:", err);
+      totalDiv.innerText = "Kur alınamadı";
     });
 }
 
-document.getElementById("amount").addEventListener("input", calculate);
-
-function calculate(){
-    let amount = parseFloat(document.getElementById("amount").value || 0);
-    let country = document.getElementById("country").value;
-    let tl = 0;
-
-    if(country=="tm") tl = amount * rateTM;
-    if(country=="ru") tl = amount * rateRU;
-    if(country=="tr") tl = amount;
-
-    tl = tl + (tl * commission);
-
-    document.getElementById("total").innerHTML = "Tölenmeli: " + tl.toFixed(2) + " TL";
-}
-
 function pay(){
-    let bank = document.getElementById("bank").value;
-    let total = document.getElementById("total").innerText;
-
-    alert("Aňsatt tölegi\n\nBank: "+bank+"\n"+total+"\n\nAlyjy: AÑSATT");
+  // Basit demo, burada ödeme yönlendirme / link ilişkilendirilir.
+  // Şimdilik sadece uyarı. İleriye banka linki eklenebilir.
+  alert("Ödeme işlemi başlatılacak.");
 }
 
-updateBanks();
+// Sayfa yüklendiğinde hesapla (önceki değer varsa)
+calculate();
 </script>
 
 </body>
