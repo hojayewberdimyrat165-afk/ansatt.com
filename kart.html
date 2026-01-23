@@ -1,60 +1,149 @@
 <!DOCTYPE html>
-<html>
+<html lang="tk">
 <head>
 <meta charset="UTF-8">
-<title>Añsatt Payment</title>
+<title>Añsatt Töleg</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:Arial;background:#eafff3;text-align:center;padding:20px}
-input,select{width:90%;padding:15px;margin:10px;font-size:16px;border-radius:10px;border:1px solid #ccc}
-button{background:#1f9d5c;color:white;padding:18px;width:95%;border:none;border-radius:12px;font-size:18px}
-.result{margin:15px;font-size:18px;font-weight:bold}
+  body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#eafff3;
+    text-align:center;
+    padding:20px;
+  }
+  h2{
+    margin-bottom:20px;
+  }
+  input,select{
+    width:90%;
+    max-width:400px;
+    padding:14px;
+    margin:8px 0;
+    font-size:16px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+  }
+  #result{
+    margin:15px 0;
+    font-size:18px;
+    font-weight:bold;
+  }
+  .btn{
+    display:block;
+    width:90%;
+    max-width:400px;
+    background:#1f9d5c;
+    color:white;
+    text-decoration:none;
+    padding:16px;
+    margin:12px auto;
+    border:none;
+    border-radius:14px;
+    font-size:18px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    cursor:pointer;
+  }
+  .btn:active{
+    transform:scale(0.97);
+  }
 </style>
 </head>
 
 <body>
 
-<h2>Añsatt Ödeme</h2>
+<h2>Añsatt Töleg</h2>
 
-<input id="phone" placeholder="+993..." />
-<input id="tmt" type="number" placeholder="Gönderilecek TMT" />
+<!-- Telefon nomerasy -->
+<input id="phone" placeholder="TM Cell nomerasy" />
 
-<select id="country">
-  <option value="tl">Türkiye (TL)</option>
-  <option value="rub">Rusya (RUB)</option>
+<!-- Gönderilecek miktar -->
+<input id="tmt" type="number" placeholder="Möçberi (TMT)" min="1" />
+
+<!-- Pul birligi -->
+<select id="currency">
+  <option value="tl">Türkiýe (TL)</option>
+  <option value="rub">Russiýa (RUB)</option>
 </select>
 
-<div class="result" id="result"></div>
+<div id="result">Töleg: —</div>
 
-<button onclick="calc()">Hesapla</button>
-<br><br>
-<button onclick="pay()">Öde</button>
+<button id="payBtn" class="btn" style="display:none" onclick="pay()">Töle</button>
 
 <script>
-let finalAmount = 0;
+  // Örnek kur değerleri. Gerçek kur API'si bağlanınca burayı güncelle.
+  const rates = {
+    tl: 5.7,   // 1 TMT = 5.7 TL örnek
+    rub: 15.2  // 1 TMT = 15.2 RUB örnek
+  };
+  const COMMISSION = 0.03; // %3
 
-function calc(){
-  let tmt = parseFloat(document.getElementById("tmt").value);
-  let rate = 5.7; // örnek: 1 TMT = 5.7 TL (sonra API bağlarız)
+  let finalAmount = 0; // Hesaplanan toplam ücret
+  let selectedCurrency = 'tl';
 
-  let base = tmt * rate;
-  let commission = base * 0.03;
-  finalAmount = Math.round(base + commission);
+  const phoneInput = document.getElementById('phone');
+  const tmtInput = document.getElementById('tmt');
+  const currencySelect = document.getElementById('currency');
+  const resultDiv = document.getElementById('result');
+  const payBtn = document.getElementById('payBtn');
 
-  document.getElementById("result").innerText =
-   "Ödenecek: " + finalAmount + " TL (Komisyon dahil)";
-}
+  // Otomatik hesaplama: telefon, miktar veya para birimi değişince
+  phoneInput.addEventListener('input', calculate);
+  tmtInput.addEventListener('input', calculate);
+  currencySelect.addEventListener('input', calculate);
 
-function pay(){
-  let phone = document.getElementById("phone").value;
-  let tmt = document.getElementById("tmt").value;
+  function calculate(){
+    const tmt = parseFloat(tmtInput.value);
+    selectedCurrency = currencySelect.value;
 
-  let msg = "ANSATT " + phone + " " + tmt + "TMT";
-  let url = "https://pay.tinkoff.ru/transfer?to=+79964917041&amount=" 
-            + finalAmount + "&message=" + encodeURIComponent(msg);
+    if (!tmt || tmt <= 0){
+      resultDiv.innerText = "Töleg: —";
+      payBtn.style.display = 'none';
+      return;
+    }
 
-  window.location.href = url;
-}
+    // Baz fiyat (TMT × kur)
+    const base = tmt * (rates[selectedCurrency] || 0);
+
+    // Komisyon +3%
+    const total = base * (1 + COMMISSION);
+
+    // Yuvarla (örnek olarak tam sayıya)
+    finalAmount = Math.round(total);
+
+    // Gösterim
+    const label = selectedCurrency === 'rub' ? "RUB" : "TL";
+    resultDiv.innerText = "Töleg: " + finalAmount + " " + label;
+
+    // Öde butonunu göster
+    payBtn.style.display = 'block';
+  }
+
+  function pay(){
+    const phone = phoneInput.value.trim();
+    const tmt = tmtInput.value.trim();
+
+    if (!phone || !tmt || finalAmount <= 0){
+      alert("TM Cell nomerasy we möçberi doly gir");
+      return;
+    }
+
+    // Mesaj kısmı: ANSATT + phone + tutar
+    const msg = "ANSATT " + phone + " " + tmt + "TMT";
+
+    // Tinkoff ödeme linki
+    // Burada miktar rub veya tl farketmez; Tinkoff genelde RUB kullanır.
+    // Yine de seçilen para birimine göre finalAmount kullanılıyor.
+    const tinkoffPhone = "+79964917041"; // SENIN TINKOFF NOMERIN
+    const url = "https://pay.tinkoff.ru/transfer?to=" 
+                + encodeURIComponent(tinkoffPhone)
+                + "&amount=" + encodeURIComponent(finalAmount)
+                + "&message=" + encodeURIComponent(msg);
+
+    // Doğrudan bankaya yönlendir
+    window.location.href = url;
+  }
 </script>
 
 </body>
