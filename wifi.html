@@ -1,65 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="tk">
 <head>
 <meta charset="UTF-8">
-<title>Añsatt Töleg</title>
+<title>Aňsatt Töleg</title>
 <link rel="stylesheet" href="stil.css">
 </head>
 <body>
 
-<h2>Añsatt Töleg</h2>
+<div class="card">
+<h2>Aňsatt Töleg</h2>
 
-<input id="phone" placeholder="+993 Telefon belgiňiz">
-<input id="amount" type="number" placeholder="Manat" oninput="hesapla()">
+<input type="text" placeholder="+993 Telefon belgiňiz">
+<input type="number" id="manat" placeholder="Manat" oninput="hesapla()">
 
-<select id="country" onchange="hesapla()">
-  <option value="RU">🇷🇺 Russiýa</option>
-  <option value="TR">🇹🇷 Türkiýe</option>
+<select id="ulke" onchange="hesapla()">
+    <option value="ru">🇷🇺 Russiýa (RUB)</option>
+    <option value="tr">🇹🇷 Türkiýe (TL)</option>
 </select>
 
-<div id="kur"></div>
+<div class="total" id="sonuc">Jemi töleg: —</div>
 
-<button class="btn" onclick="ode()">Töle</button>
+<button class="btn">Töle</button>
+</div>
 
 <script>
-const KOMISYON = 1.05;
+function hesapla(){
+    let manat = document.getElementById("manat").value;
+    let ulke = document.getElementById("ulke").value;
 
-async function kurGetir(){
-  const res = await fetch("https://open.er-api.com/v6/latest/TMT");
-  const data = await res.json();
-  return data.rates;
-}
+    if(manat == "") return;
 
-async function hesapla(){
-  const manat = document.getElementById("amount").value;
-  const ulke = document.getElementById("country").value;
-  const kur = document.getElementById("kur");
+    // Sahte kurlar (sonra API ile değiştirilecek)
+    let rub = 4.2;
+    let tl = 0.95;
 
-  if(!manat) return;
+    let sonuc = ulke=="ru" ? manat * rub : manat * tl;
 
-  const rates = await kurGetir();
-  let sonuc = 0;
+    // %3 komisyon
+    sonuc = sonuc * 1.03;
 
-  if(ulke=="RU"){
-    sonuc = manat * rates.RUB * KOMISYON;
-    kur.innerText = "Ödenecek: " + sonuc.toFixed(2) + " RUB";
-  }
+    let para = ulke=="ru" ? "RUB" : "TL";
 
-  if(ulke=="TR"){
-    sonuc = manat * rates.TRY * KOMISYON;
-    kur.innerText = "Ödenecek: " + sonuc.toFixed(2) + " TL";
-  }
-}
-
-function ode(){
-  const ulke = document.getElementById("country").value;
-
-  if(ulke=="RU"){
-    window.location.href="https://www.tinkoff.ru/payments/";
-  }
-  if(ulke=="TR"){
-    alert("Türkiye yakında eklenecek");
-  }
+    document.getElementById("sonuc").innerText =
+        "Jemi töleg: " + sonuc.toFixed(2) + " " + para;
 }
 </script>
 
