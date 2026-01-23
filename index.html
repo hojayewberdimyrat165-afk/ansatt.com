@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Añsatt</title>
+
 <style>
 body{
     margin:0;
@@ -12,50 +14,42 @@ body{
     text-align:center;
 }
 
+/* Logo */
 .logo-box{
     margin-top:40px;
 }
-
 .logo-box img{
-    width:180px;
+    width:200px;
 }
 
-.logo-text{
-    font-size:26px;
-    font-weight:bold;
-    margin-top:10px;
+/* Butonlar */
+.menu{
+    margin-top:30px;
 }
-
-.logo-sub{
-    color:#555;
-    font-size:14px;
-}
-
-.btn{
+.menu a{
+    display:block;
     width:85%;
     max-width:400px;
-    background:#1f9d5c;
+    margin:15px auto;
+    padding:16px;
+    background:#2da36a;
     color:white;
-    border:none;
-    padding:18px;
+    text-decoration:none;
     font-size:18px;
-    border-radius:14px;
-    margin:12px auto;
-    display:block;
-    box-shadow:0 4px 10px rgba(0,0,0,0.2);
-    cursor:pointer;
+    font-weight:bold;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+.menu a:hover{
+    background:#25945f;
 }
 
-.btn:hover{
-    background:#17824c;
-}
-
+/* Footer */
 .footer{
     margin-top:40px;
+    font-size:14px;
     color:#333;
-    font-size:15px;
 }
-
 .footer div{
     margin:8px;
 }
@@ -68,15 +62,15 @@ body{
     <img src="logo.png">
 </div>
 
-<br>
-<a href="payment.html">💳 Karttan Telefona</a>
-<a href="payment.html">📱 Telefondan Telefona</a>
-<a href="payment.html">📡 Wi-Fi & Mobil Balans</a>
-
+<div class="menu">
+    <a href="payment.html">💳 Karttan Telefona</a>
+    <a href="payment.html">📱 Telefondan Telefona</a>
+    <a href="payment.html">📡 Wi-Fi & Mobil Balans</a>
+</div>
 
 <div class="footer">
     <div>📞 +7 902 388-95-02</div>
-    <div>✉ hojayewberdimyrat165@gmail.com</div>
+    <div>✉️ hojayewberdimyrat165@gmail.com</div>
     <div>WhatsApp · Telegram · VK</div>
 </div>
 
