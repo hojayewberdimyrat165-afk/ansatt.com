@@ -1,64 +1,75 @@
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
-}
-
 body{
-  background:#eafff4;
+  margin:0;
+  background:#e9fff2;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
 }
 
-.app{
-  max-width:420px;
-  margin:auto;
-  padding:20px;
+.phone{
+  width:360px;
+  background:#ffffff;
+  border-radius:40px;
+  padding:25px 15px 30px;
+  box-shadow:0 0 40px rgba(0,0,0,0.15);
   text-align:center;
 }
 
 .logo img{
-  width:120px;
-  margin-top:30px;
+  width:80px;
 }
 
 .logo h1{
-  color:#2fa36b;
-  font-size:36px;
-  margin-top:10px;
+  margin:10px 0 0;
+  color:#1f8f55;
 }
 
-.logo p{
-  color:#666;
+.logo span{
+  color:#777;
+  font-size:14px;
 }
 
 .buttons{
-  margin-top:40px;
+  margin-top:30px;
 }
 
 .btn{
-  background:white;
-  margin:15px 0;
-  padding:18px;
-  border-radius:20px;
-  font-size:18px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-.contact-box{
-  background:#2fa36b;
-  color:white;
-  padding:20px;
-  border-radius:20px;
-  margin-top:40px;
-}
-
-.socials{
   display:flex;
+  align-items:center;
   justify-content:center;
-  gap:20px;
+  background:#f6fffb;
+  margin:15px 0;
+  padding:16px;
+  border-radius:25px;
+  text-decoration:none;
+  color:#1f8f55;
+  font-size:18px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+.btn span{
+  margin-left:10px;
+}
+
+.contact{
+  background:linear-gradient(135deg,#2fa76c,#1f8f55);
+  color:white;
+  border-radius:25px;
+  padding:15px;
   margin-top:25px;
 }
 
+.contact p{
+  margin:6px 0;
+}
+
+.socials{
+  margin-top:15px;
+}
+
 .socials img{
-  width:50px;
+  width:40px;
+  margin:0 10px;
 }
