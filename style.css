@@ -46,3 +46,50 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
 }
+body {
+    background:#e9fff4;
+    font-family: Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card {
+    background:white;
+    padding:30px;
+    width:320px;
+    border-radius:16px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+    text-align:center;
+}
+
+.logo {
+    width:90px;
+    margin-bottom:10px;
+}
+
+.btn {
+    display:block;
+    background:#1fb36b;
+    color:white;
+    padding:14px;
+    margin:10px 0;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:16px;
+}
+.btn:hover { background:#159d5c; }
+
+input, select {
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+.total {
+    font-weight:bold;
+    margin-top:10px;
+}
