@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Añsatt Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#eafff3;text-align:center;padding:20px}
+input,select{width:90%;padding:15px;margin:10px;font-size:16px;border-radius:10px;border:1px solid #ccc}
+button{background:#1f9d5c;color:white;padding:18px;width:95%;border:none;border-radius:12px;font-size:18px}
+.result{margin:15px;font-size:18px;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<h2>Añsatt Ödeme</h2>
+
+<input id="phone" placeholder="+993..." />
+<input id="tmt" type="number" placeholder="Gönderilecek TMT" />
+
+<select id="country">
+  <option value="tl">Türkiye (TL)</option>
+  <option value="rub">Rusya (RUB)</option>
+</select>
+
+<div class="result" id="result"></div>
+
+<button onclick="calc()">Hesapla</button>
+<br><br>
+<button onclick="pay()">Öde</button>
+
+<script>
+let finalAmount = 0;
+
+function calc(){
+  let tmt = parseFloat(document.getElementById("tmt").value);
+  let rate = 5.7; // örnek: 1 TMT = 5.7 TL (sonra API bağlarız)
+
+  let base = tmt * rate;
+  let commission = base * 0.03;
+  finalAmount = Math.round(base + commission);
+
+  document.getElementById("result").innerText =
+   "Ödenecek: " + finalAmount + " TL (Komisyon dahil)";
+}
+
+function pay(){
+  let phone = document.getElementById("phone").value;
+  let tmt = document.getElementById("tmt").value;
+
+  let msg = "ANSATT " + phone + " " + tmt + "TMT";
+  let url = "https://pay.tinkoff.ru/transfer?to=+79964917041&amount=" 
+            + finalAmount + "&message=" + encodeURIComponent(msg);
+
+  window.location.href = url;
+}
+</script>
+
+</body>
+</html>
