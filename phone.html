@@ -1,138 +1,66 @@
 <!DOCTYPE html>
-<html lang="tk">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Añsatt Töleg</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#eafff3;
-    text-align:center;
-    padding:20px;
-}
-
-.container{
-    max-width:420px;
-    background:white;
-    margin:40px auto;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-
-h2{
-    margin-bottom:20px;
-}
-
-input, select{
-    width:100%;
-    padding:12px;
-    margin:8px 0;
-    border-radius:8px;
-    border:1px solid #ccc;
-    font-size:16px;
-}
-
-.total{
-    font-size:18px;
-    margin:15px 0;
-    font-weight:bold;
-}
-
-button{
-    width:100%;
-    padding:14px;
-    background:#1f9f55;
-    color:white;
-    border:none;
-    border-radius:10px;
-    font-size:18px;
-    margin-top:10px;
-}
-</style>
+<link rel="stylesheet" href="stil.css">
 </head>
 <body>
 
-<div class="container">
-  <h2>Añsatt Töleg</h2>
+<h2>Añsatt Töleg</h2>
 
-  <!-- Telefon numarası -->
-  <input id="phone" placeholder="+993 Telefon belgiňiz">
+<input id="phone" placeholder="+993 Telefon belgiňiz">
+<input id="amount" type="number" placeholder="Manat" oninput="hesapla()">
 
-  <!-- Gönderilecek miktar -->
-  <input id="amount" type="number" placeholder="Ugradyljak mukdar">
+<select id="country" onchange="hesapla()">
+  <option value="RU">🇷🇺 Russiýa</option>
+  <option value="TR">🇹🇷 Türkiýe</option>
+</select>
 
-  <!-- Ülke seçimi -->
-  <select id="country">
-    <option value="ru">🇷🇺 Russiýa</option>
-    <option value="tr">🇹🇷 Türkiýe</option>
-  </select>
+<div id="kur"></div>
 
-  <!-- Sonuç gösterimi -->
-  <div class="total" id="total">Tölenmeli: —</div>
-
-  <!-- Öde butonu -->
-  <button onclick="pay()">Töle</button>
-</div>
+<button class="btn" onclick="ode()">Töle</button>
 
 <script>
-// Buradaki değerleri ileride canlı kur / DoctorSIM fiyatı ile güncelleyebilirsin.
-const doctorUSDperTMT = 0.055; // örnek: 1 Manat = 0.055 USD, gerçek değer güncellenmeli
-const commission = 0.03;      // %3
+const KOMISYON = 1.05;
 
-const amountInput = document.getElementById('amount');
-const countrySelect = document.getElementById('country');
-const totalDiv = document.getElementById('total');
+async function kurGetir(){
+  const res = await fetch("https://open.er-api.com/v6/latest/TMT");
+  const data = await res.json();
+  return data.rates;
+}
 
-// Her miktar, ülke değiştiğinde otomatik hesapla
-amountInput.addEventListener('input', calculate);
-countrySelect.addEventListener('change', calculate);
+async function hesapla(){
+  const manat = document.getElementById("amount").value;
+  const ulke = document.getElementById("country").value;
+  const kur = document.getElementById("kur");
 
-function calculate(){
-  const amount = parseFloat(amountInput.value || 0);
-  const country = countrySelect.value;
+  if(!manat) return;
 
-  if(amount <= 0){
-    totalDiv.innerText = "Tölenmeli: —";
-    return;
+  const rates = await kurGetir();
+  let sonuc = 0;
+
+  if(ulke=="RU"){
+    sonuc = manat * rates.RUB * KOMISYON;
+    kur.innerText = "Ödenecek: " + sonuc.toFixed(2) + " RUB";
   }
 
-  // Önce USD cinsine çevir
-  const usd = amount * doctorUSDperTMT * (1 + commission);
-
-  // Kur API'si ile TL veya RUB'e çevir
-  fetch("https://api.exchangerate.host/latest?base=USD")
-    .then(res => res.json())
-    .then(data => {
-      if(country === "ru"){
-        const rubRate = data.rates.RUB;
-        const rubTotal = usd * rubRate;
-        totalDiv.innerHTML = "Tölenmeli: <b>" + rubTotal.toFixed(2) + " RUB</b>";
-      } else if(country === "tr"){
-        const tlRate = data.rates.TRY;
-        const tlTotal = usd * tlRate;
-        totalDiv.innerHTML = "Tölenmeli: <b>" + tlTotal.toFixed(2) + " TL</b>";
-      } else {
-        totalDiv.innerText = "Tölenmeli: —";
-      }
-    })
-    .catch(err => {
-      // API çalışmazsa, sadece USD bilgisiyle gösterme (opsiyonel)
-      console.error("Kur alırken hata:", err);
-      totalDiv.innerText = "Kur alınamadı";
-    });
+  if(ulke=="TR"){
+    sonuc = manat * rates.TRY * KOMISYON;
+    kur.innerText = "Ödenecek: " + sonuc.toFixed(2) + " TL";
+  }
 }
 
-function pay(){
-  // Basit demo, burada ödeme yönlendirme / link ilişkilendirilir.
-  // Şimdilik sadece uyarı. İleriye banka linki eklenebilir.
-  alert("Ödeme işlemi başlatılacak.");
-}
+function ode(){
+  const ulke = document.getElementById("country").value;
 
-// Sayfa yüklendiğinde hesapla (önceki değer varsa)
-calculate();
+  if(ulke=="RU"){
+    window.location.href="https://www.tinkoff.ru/payments/";
+  }
+  if(ulke=="TR"){
+    alert("Türkiye yakında eklenecek");
+  }
+}
 </script>
 
 </body>
