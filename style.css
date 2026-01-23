@@ -1,66 +1,64 @@
-body {
-  margin: 0;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
   font-family: Arial, sans-serif;
-  background: #e9fbf2;
 }
 
-.app {
-  max-width: 430px;
-  margin: auto;
-  padding: 20px;
-  text-align: center;
+body{
+  background:#eafff4;
 }
 
-.logo-area {
-  margin-top: 20px;
+.app{
+  max-width:420px;
+  margin:auto;
+  padding:20px;
+  text-align:center;
 }
 
-.logo {
-  width: 140px;
-  margin-bottom: 10px;
+.logo img{
+  width:120px;
+  margin-top:30px;
 }
 
-.brand {
-  font-size: 34px;
-  font-weight: bold;
-  color: #1fa36b;
+.logo h1{
+  color:#2fa36b;
+  font-size:36px;
+  margin-top:10px;
 }
 
-.sub {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 25px;
+.logo p{
+  color:#666;
 }
 
-.buttons {
-  margin-top: 20px;
+.buttons{
+  margin-top:40px;
 }
 
-.btn {
-  background: white;
-  border-radius: 20px;
-  padding: 18px;
-  margin: 15px 0;
-  font-size: 20px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+.btn{
+  background:white;
+  margin:15px 0;
+  padding:18px;
+  border-radius:20px;
+  font-size:18px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-.contact-box {
-  margin-top: 25px;
-  background: #1fa36b;
-  color: white;
-  padding: 18px;
-  border-radius: 20px;
-  font-size: 16px;
+.contact-box{
+  background:#2fa36b;
+  color:white;
+  padding:20px;
+  border-radius:20px;
+  margin-top:40px;
 }
 
-.social {
-  margin-top: 15px;
-  font-size: 18px;
+.socials{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:25px;
 }
 
-.social span {
-  margin: 0 12px;
-  color: #1fa36b;
-  font-weight: bold;
+.socials img{
+  width:50px;
 }
