@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aňsatt Ödeme</title>
+<title>Aňsatt Töleg</title>
 
 <style>
 body{
@@ -14,7 +14,7 @@ body{
 }
 
 .container{
-    max-width:400px;
+    max-width:420px;
     background:white;
     margin:40px auto;
     padding:20px;
@@ -57,41 +57,48 @@ button{
 <body>
 
 <div class="container">
-<h2>Aňsatt Ödeme</h2>
+<h2>Aňsatt Töleg</h2>
 
-<input id="phone" placeholder="+993 Telefon numarası">
-<input id="amount" type="number" placeholder="Gönderilecek tutar">
+<input id="phone" placeholder="+993 Telefon belgiňiz">
+<input id="amount" type="number" placeholder="Ugradyljak mukdar">
 
-<select id="country">
-<option value="tm">Türkmenistan (TM)</option>
-<option value="ru">Rusya (RUB)</option>
-<option value="tr">Türkiye (TL)</option>
+<select id="country" onchange="updateBanks();calculate();">
+<option value="tm">🇹🇲 Türkmenistan</option>
+<option value="ru">🇷🇺 Russiýa</option>
+<option value="tr">🇹🇷 Türkiýe</option>
 </select>
 
-<select id="bank">
-<option>Tinkoff</option>
-<option>Sberbank</option>
-<option>SBP (Telefon ile)</option>
-<option>Alfa Bank</option>
-<option>VTB</option>
-<option>Garanti</option>
-<option>Ziraat</option>
-<option>Papara</option>
-<option>FAST</option>
-</select>
+<select id="bank"></select>
 
-<div class="total" id="total">Ödenecek: 0</div>
+<div class="total" id="total">Tölenmeli: 0</div>
 
-<button onclick="pay()">Öde</button>
+<button onclick="pay()">Töle</button>
 </div>
 
 <script>
-const rateTM = 5.8;   // 1 Manat = 5.8 TL
-const rateRU = 0.33; // 1 Ruble = 0.33 TL
-const commission = 0.03; // %3 senin kazancın
+const rateTM = 5.8;
+const rateRU = 0.33;
+const commission = 0.03;
+
+const banks = {
+    tm: ["TM Cell", "Agrobank", "Senagat Bank", "Halkbank"],
+    ru: ["Tinkoff", "Sberbank", "SBP (Telefon arkaly)", "Alfa Bank", "VTB"],
+    tr: ["Ziraat", "Garanti", "Papara", "FAST", "Akbank"]
+};
+
+function updateBanks(){
+    let country = document.getElementById("country").value;
+    let bankSelect = document.getElementById("bank");
+    bankSelect.innerHTML = "";
+
+    banks[country].forEach(bank=>{
+        let opt = document.createElement("option");
+        opt.text = bank;
+        bankSelect.add(opt);
+    });
+}
 
 document.getElementById("amount").addEventListener("input", calculate);
-document.getElementById("country").addEventListener("change", calculate);
 
 function calculate(){
     let amount = parseFloat(document.getElementById("amount").value || 0);
@@ -104,15 +111,17 @@ function calculate(){
 
     tl = tl + (tl * commission);
 
-    document.getElementById("total").innerHTML = "Ödenecek: " + tl.toFixed(2) + " TL";
+    document.getElementById("total").innerHTML = "Tölenmeli: " + tl.toFixed(2) + " TL";
 }
 
 function pay(){
     let bank = document.getElementById("bank").value;
     let total = document.getElementById("total").innerText;
 
-    alert("Aňsatt Ödeme Yönlendiriliyor\n\nBanka: "+bank+"\n"+total+"\n\nAlıcı: AÑSATT");
+    alert("Aňsatt tölegi\n\nBank: "+bank+"\n"+total+"\n\nAlyjy: AÑSATT");
 }
+
+updateBanks();
 </script>
 
 </body>
