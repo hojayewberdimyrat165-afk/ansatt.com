@@ -2,47 +2,165 @@
 <html lang="tk">
 <head>
 <meta charset="UTF-8">
-<title>Aňsatt Töleg</title>
-<link rel="stylesheet" href="stil.css">
+<title>Añsatt Töleg</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* arka plan ve font */
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#eafff3;
+  text-align:center;
+}
+
+/* kartın dış kabı */
+.card {
+  max-width:400px;
+  margin:50px auto;
+  background:white;
+  padding:25px 20px 30px;
+  border-radius:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* logo */
+.card .logo {
+  width:120px;
+  margin:0 auto 15px;
+  display:block;
+}
+
+/* başlık */
+.card h2 {
+  margin:0 0 20px;
+  font-size:24px;
+  font-weight:bold;
+  color:#333;
+}
+
+/* input ve select */
+.card input,
+.card select {
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+/* sonuç metni */
+.card .result {
+  margin-top:14px;
+  font-size:18px;
+  font-weight:bold;
+  color:#333;
+}
+
+/* buton */
+.card .btn-pay {
+  width:100%;
+  padding:14px;
+  margin-top:18px;
+  background:#2a9450;  /* yeşil */
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:18px;
+  cursor:pointer;
+}
+.card .btn-pay:hover {
+  background:#208444;
+}
+
+/* küçük ekranlarda */
+@media (max-width:380px){
+  .card {
+    margin:30px 10px;
+    padding:20px 15px 25px;
+  }
+  .card h2 {
+    font-size:20px;
+  }
+  .card input, .card select {
+    font-size:14px;
+    padding:12px;
+  }
+  .card .btn-pay {
+    font-size:16px;
+    padding:12px;
+  }
+}
+</style>
 </head>
+
 <body>
 
 <div class="card">
-<h2>Aňsatt Töleg</h2>
+  <!-- logo görüntüsü: logo.png dosyan github repo'da olmalı -->
+  <img src="logo.png" alt="Añsatt Logo" class="logo">
 
-<input type="text" placeholder="+993 Telefon belgiňiz">
-<input type="number" id="manat" placeholder="Manat" oninput="hesapla()">
+  <h2>Añsatt Töleg</h2>
 
-<select id="ulke" onchange="hesapla()">
-    <option value="ru">🇷🇺 Russiýa (RUB)</option>
-    <option value="tr">🇹🇷 Türkiýe (TL)</option>
-</select>
+  <!-- telefon -->
+  <input id="phone" type="tel" placeholder="+993 Telefon belgiňiz">
 
-<div class="total" id="sonuc">Jemi töleg: —</div>
+  <!-- miktar (Manat) -->
+  <input id="manat" type="number" placeholder="Manat" oninput="calculate()">
 
-<button class="btn">Töle</button>
+  <!-- ülke seçimi -->
+  <select id="country" onchange="calculate()">
+    <option value="RU">🇷🇺 Russiýa (RUB)</option>
+    <option value="TR">🇹🇷 Türkiýe (TL)</option>
+  </select>
+
+  <!-- hesaplanan sonuç -->
+  <div class="result" id="result">Jemi töleg: —</div>
+
+  <!-- ödeme butonu -->
+  <button class="btn-pay" onclick="pay()">Töle</button>
 </div>
 
 <script>
-function hesapla(){
-    let manat = document.getElementById("manat").value;
-    let ulke = document.getElementById("ulke").value;
+// Örnek sabit kur değerleri; ileride gerçek API veya güncel kurları kullanırsın.
+const RATES = {
+  RUB: 5.3,   // 1 Manat = 5.3 RUB (örnek)
+  TRY: 6.2    // 1 Manat = 6.2 TL (örnek)
+};
+const COMMISSION = 1.03; // %3
 
-    if(manat == "") return;
+function calculate(){
+  const manat = parseFloat(document.getElementById('manat').value);
+  const country = document.getElementById('country').value;
+  const resultDiv = document.getElementById('result');
 
-    // Sahte kurlar (sonra API ile değiştirilecek)
-    let rub = 4.2;
-    let tl = 0.95;
+  if (!manat || manat <= 0) {
+    resultDiv.innerText = "Jemi töleg: —";
+    return;
+  }
 
-    let sonuc = ulke=="ru" ? manat * rub : manat * tl;
+  const rate = (country === 'RU') ? RATES.RUB : RATES.TRY;
+  let total = manat * rate;
+  total = total * COMMISSION;
 
-    // %3 komisyon
-    sonuc = sonuc * 1.03;
+  const currencyLabel = (country === 'RU') ? "₽" : "₺";
+  resultDiv.innerText = "Jemi töleg: " + total.toFixed(2) + " " + currencyLabel;
+}
 
-    let para = ulke=="ru" ? "RUB" : "TL";
+function pay(){
+  const phone = document.getElementById('phone').value.trim();
+  const manat = document.getElementById('manat').value.trim();
 
-    document.getElementById("sonuc").innerText =
-        "Jemi töleg: " + sonuc.toFixed(2) + " " + para;
+  if (!phone || !manat) {
+    alert("Telefon we manat girmegiňizi haýyş edýäris");
+    return;
+  }
+
+  // Buraya gerçek ödeme linkini ekleyebilirsin.
+  // Örneğin Tinkoff linki:
+  window.location.href = "https://www.tinkoff.ru/pay/";
 }
 </script>
 
