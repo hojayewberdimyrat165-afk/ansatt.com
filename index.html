@@ -1,77 +1,103 @@
 <!DOCTYPE html>
-<html lang="tk">
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <title>Añsatt Töleg</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="stil.css">
+<style>
+body {
+  background:#eafff3;
+  font-family: Arial;
+  margin:0;
+}
+.box {
+  max-width:400px;
+  margin:40px auto;
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+input, select {
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+button {
+  width:100%;
+  padding:14px;
+  background:#1db954;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-size:18px;
+}
+.result {
+  margin-top:15px;
+  font-weight:bold;
+  font-size:18px;
+}
+</style>
 </head>
+
 <body>
-
-<div class="card">
+<div class="box">
+  <center>
+    <img src="logo.png" width="120"><br><br>
     <h2>Añsatt Töleg</h2>
+  </center>
 
-    <input type="tel" id="phone" placeholder="+993 Telefon belgiňiz">
-    <input type="number" id="amount" placeholder="Manat">
+  <input id="phone" placeholder="+993 Telefon belgiňiz">
+  <input id="manat" type="number" placeholder="Manat">
 
-    <select id="country">
-        <option value="ru">🇷🇺 Russiýa (RUB)</option>
-        <option value="tr">🇹🇷 Türkiýe (TL)</option>
-    </select>
+  <select id="country" onchange="hesapla()">
+    <option value="RU">🇷🇺 Russiýa (RUB)</option>
+    <option value="TR">🇹🇷 Türkiye (TL)</option>
+  </select>
 
-    <div class="result" id="result">Jemi töleg: —</div>
+  <div class="result" id="sonuc">Jemi töleg: —</div>
 
-    <button onclick="calculate()">Töle</button>
+  <button onclick="ode()">Töle</button>
 </div>
 
 <script>
-function calculate() {
-    let manat = document.getElementById("amount").value;
-    let country = document.getElementById("country").value;
+// Sahte ama gerçekçi kur
+let rates = {
+  RUB: 5.3,   // 1 Manat = 5.3 RUB
+  TRY: 6.2    // 1 Manat = 6.2 TL
+};
 
-    if (manat === "") {
-        alert("Mukdary giriziň");
-        return;
-    }
+function hesapla(){
+  let manat = document.getElementById("manat").value;
+  let ulke = document.getElementById("country").value;
 
-    let rate;
-    let currency;
+  if(!manat) return;
 
-    if (country === "ru") {
-        rate = 3.2; // 1 manat = 3.2 RUB (örnek)
-        currency = "₽";
-    } else {
-        rate = 1.8; // 1 manat = 1.8 TL (örnek)
-        currency = "₺";
-    }
-<!DOCTYPE html>
-<html lang="tk">
-<head>
-<meta charset="UTF-8">
-<title>Aňsatt</title>
-<link rel="stylesheet" href="stil.css">
-</head>
-<body>
+  let kur = (ulke=="RU") ? rates.RUB : rates.TRY;
+  let toplam = manat * kur;
 
-<div class="card">
-    <img src="logo.png" class="logo">
+  // %3 komisyon
+  toplam = toplam * 1.03;
 
-    <h1>Aňsatt</h1>
+  let para = (ulke=="RU") ? "₽" : "₺";
 
-    <a href="telefon.html" class="btn">📱 Telefona Pul Iber</a>
-    <a href="kart.html" class="btn">💳 Karta Pul Iber</a>
-    <a href="wifi.html" class="btn">📶 Wi-Fi & Balans</a>
-</div>
+  document.getElementById("sonuc").innerHTML =
+    "Jemi töleg: " + toplam.toFixed(2) + " " + para;
+}
 
-</body>
-</html>
+function ode(){
+  let tel = document.getElementById("phone").value;
+  let manat = document.getElementById("manat").value;
 
-    let commission = 0.03; // %3 komisyon
-    let total = manat * rate;
-    let final = total + (total * commission);
+  if(tel=="" || manat==""){
+    alert("Telefon we manat gir!");
+    return;
+  }
 
-    document.getElementById("result").innerText =
-        "Jemi töleg: " + final.toFixed(2) + " " + currency;
+  // Tinkoff linkine yönlendir
+  window.location.href = "https://www.tinkoff.ru/pay/";
 }
 </script>
 
