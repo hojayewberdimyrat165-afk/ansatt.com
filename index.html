@@ -1,62 +1,89 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Añsatt</title>
-  <style>
-    body {
-      background:#eafff3;
-      font-family: Arial;
-      margin:0;
-      text-align:center;
+<meta charset="UTF-8">
+<title>Añsatt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  /* sayfa arka plan ve genel font */
+  body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#eafff3; /* çok hafif yeşil */
+    text-align:center;
+  }
+
+  /* logo kutusu */
+  .logo-box{
+    margin-top:40px;
+  }
+  .logo-box img{
+    width:170px; /* logo büyüklüğü */
+    max-width:80%;
+  }
+
+  /* butonları tutan alan */
+  .menu{
+    margin-top:30px;
+  }
+  .menu a{
+    display:block;
+    width:85%;
+    max-width:400px;
+    margin:14px auto;
+    padding:18px;
+    background:#2a9450; /* koyu yeşil */
+    color:white;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:600;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  }
+  .menu a:hover{
+    background:#208444;
+  }
+
+  /* iletişim alanı */
+  .footer{
+    margin-top:40px;
+    font-size:14px;
+    color:#333;
+  }
+  .footer div{
+    margin:8px;
+  }
+
+  /* küçük ekranlarda ayar */
+  @media(max-width:400px){
+    .menu a{
+      font-size:16px;
+      padding:14px;
     }
-    .logo-box{
-      margin-top:40px;
-    }
-    .logo-box img{
-      width:140px;
-    }
-    .logo-text{
-      font-size:26px;
-      font-weight:bold;
-      margin-top:10px;
-    }
-    .logo-sub{
-      margin-top: 20px;
-    }
-    .footer div{
-      margin:8px;
-    }
-    a {
-      text-decoration:none;
-      font-size:20px;
-      color:#1db954;
-      margin:5px;
-    }
-    a:hover {
-      color:#16b23d;
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
-  <div class="logo-box">
-    <img src="logo.png">
-  </div>
-  <div class="logo-text">Añsatt</div>
-  <div class="logo-sub">from hojayev</div>
 
-  <div class="button-box">
-    <br>
-    <a href="kart.html">Kartdan Telefona</a>
-    <a href="telefon.html">Telefandan Telefona</a>
-    <a href="wifi.html">Wi-Fi & Mobil Balans</a>
+  <div class="logo-box">
+    <!-- logo.png dosyan olmalı repository'de -->
+    <img src="logo.png" alt="Añsatt Logo">
+  </div>
+
+  <div class="menu">
+    <!-- Buradaki href'leri kendi ödeme sayfalarına yönlendirebilirsin -->
+    <a href="kart.html">💳 Kartdan Telefona</a>
+    <a href="telefon.html">📱 Telefondan Telefona</a>
+    <a href="wifi.html">📡 Wi‑Fi & Mobil Balans</a>
   </div>
 
   <div class="footer">
-    <div>📞 +7 902 388-95-02</div>
+    <div>📞 +7 902 388‑95‑02</div>
     <div>📧 hojayewberdimyrat165@gmail.com</div>
     <div>WhatsApp · Telegram · VK</div>
   </div>
+
 </body>
 </html>
