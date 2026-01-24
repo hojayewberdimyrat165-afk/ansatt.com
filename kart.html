@@ -1,98 +1,168 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tk">
 <head>
-  <meta charset="UTF-8">
-  <title>Añsatt Töleg</title>
-  <style>
-    body {
-      background:#eafff3;
-      font-family: Arial;
-      margin:0;
-    }
-    .box {
-      max-width:400px;
-      margin:40px auto;
-      background:white;
-      padding:20px;
-      border-radius:12px;
-      box-shadow:0 0 10px rgba(0,0,0,.1);
-    }
-    input, select {
-      width:100%;
-      padding:12px;
-      margin:8px 0;
-      border-radius:8px;
-      border:1px solid #ccc;
-      font-size:16px;
-    }
-    button {
-      width:100%;
-      padding:14px;
-      background:#1db954;
-      color:white;
-      border:none;
-      border-radius:8px;
-      font-size:18px;
-    }
-    .result {
-      margin-top:15px;
-      font-weight:bold;
-      font-size:18px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Añsatt Töleg</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* arka plan ve font */
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#eafff3;
+  text-align:center;
+}
+
+/* kartın dış kabı */
+.card {
+  max-width:400px;
+  margin:50px auto;
+  background:white;
+  padding:25px 20px 30px;
+  border-radius:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* logo */
+.card .logo {
+  width:120px;
+  margin:0 auto 15px;
+  display:block;
+}
+
+/* başlık */
+.card h2 {
+  margin:0 0 20px;
+  font-size:24px;
+  font-weight:bold;
+  color:#333;
+}
+
+/* input ve select */
+.card input,
+.card select {
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+/* sonuç metni */
+.card .result {
+  margin-top:14px;
+  font-size:18px;
+  font-weight:bold;
+  color:#333;
+}
+
+/* buton */
+.card .btn-pay {
+  width:100%;
+  padding:14px;
+  margin-top:18px;
+  background:#2a9450;  /* yeşil */
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:18px;
+  cursor:pointer;
+}
+.card .btn-pay:hover {
+  background:#208444;
+}
+
+/* küçük ekranlarda */
+@media (max-width:380px){
+  .card {
+    margin:30px 10px;
+    padding:20px 15px 25px;
+  }
+  .card h2 {
+    font-size:20px;
+  }
+  .card input, .card select {
+    font-size:14px;
+    padding:12px;
+  }
+  .card .btn-pay {
+    font-size:16px;
+    padding:12px;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="box">
-    <center>
-      <img src="logo.png" width="120"><br><br>
-      <h2>Añsatt Töleg</h2>
-    </center>
 
-    <input id="phone" placeholder="+993 Telefon belgiňiz">
-    <input id="manat" type="number" placeholder="Manat">
-    <select id="country" onchange="hesapla()">
-      <option value="RU">🇷🇺 Russiýa (RUB)</option>
-      <option value="TR">🇹🇷 Türkiye (TL)</option>
-    </select>
+<div class="card">
+  <!-- logo görüntüsü: logo.png dosyan github repo'da olmalı -->
+  <img src="logo.png" alt="Añsatt Logo" class="logo">
 
-    <div class="result" id="sonuc">Jemi töleg: —</div>
+  <h2>Añsatt Töleg</h2>
 
-    <button onclick="ode()">Töle</button>
-  </div>
+  <!-- telefon -->
+  <input id="phone" type="tel" placeholder="+993 Telefon belgiňiz">
 
-  <script>
-    let rates = {
-      RUB: 5.3,
-      TRY: 6.2
-    };
+  <!-- miktar (Manat) -->
+  <input id="manat" type="number" placeholder="Manat" oninput="calculate()">
 
-    function hesapla(){
-      let manat = document.getElementById("manat").value;
-      let ulke = document.getElementById("country").value;
+  <!-- ülke seçimi -->
+  <select id="country" onchange="calculate()">
+    <option value="RU">🇷🇺 Russiýa (RUB)</option>
+    <option value="TR">🇹🇷 Türkiýe (TL)</option>
+  </select>
 
-      if(!manat) return;
+  <!-- hesaplanan sonuç -->
+  <div class="result" id="result">Jemi töleg: —</div>
 
-      let kur = (ulke=="RU") ? rates.RUB : rates.TRY;
-      let toplam = manat * kur;
-      toplam = toplam * 1.03;
+  <!-- ödeme butonu -->
+  <button class="btn-pay" onclick="pay()">Töle</button>
+</div>
 
-      let para = (ulke=="RU") ? "₽" : "₺";
-      document.getElementById("sonuc").innerHTML =
-        "Jemi töleg: " + toplam.toFixed(2) + " " + para;
-    }
+<script>
+// Örnek sabit kur değerleri; ileride gerçek API veya güncel kurları kullanırsın.
+const RATES = {
+  RUB: 5.3,   // 1 Manat = 5.3 RUB (örnek)
+  TRY: 6.2    // 1 Manat = 6.2 TL (örnek)
+};
+const COMMISSION = 1.03; // %3
 
-    function ode(){
-      let tel = document.getElementById("phone").value;
-      let manat = document.getElementById("manat").value;
+function calculate(){
+  const manat = parseFloat(document.getElementById('manat').value);
+  const country = document.getElementById('country').value;
+  const resultDiv = document.getElementById('result');
 
-      if(tel=="" || manat==""){
-        alert("Telefon we manat gir!");
-        return;
-      }
+  if (!manat || manat <= 0) {
+    resultDiv.innerText = "Jemi töleg: —";
+    return;
+  }
 
-      window.location.href = "https://www.tinkoff.ru/pay/";
-    }
-  </script>
+  const rate = (country === 'RU') ? RATES.RUB : RATES.TRY;
+  let total = manat * rate;
+  total = total * COMMISSION;
+
+  const currencyLabel = (country === 'RU') ? "₽" : "₺";
+  resultDiv.innerText = "Jemi töleg: " + total.toFixed(2) + " " + currencyLabel;
+}
+
+function pay(){
+  const phone = document.getElementById('phone').value.trim();
+  const manat = document.getElementById('manat').value.trim();
+
+  if (!phone || !manat) {
+    alert("Telefon we manat girmegiňizi haýyş edýäris");
+    return;
+  }
+
+  // Buraya gerçek ödeme linkini ekleyebilirsin.
+  // Örneğin Tinkoff linki:
+  window.location.href = "https://www.tinkoff.ru/pay/";
+}
+</script>
+
 </body>
 </html>
