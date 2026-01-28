@@ -4,86 +4,119 @@
 <meta charset="UTF-8">
 <title>Añsatt</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-  /* sayfa arka plan ve genel font */
-  body {
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#eafff3; /* çok hafif yeşil */
-    text-align:center;
-  }
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#e9fff5;
+}
 
-  /* logo kutusu */
-  .logo-box{
-    margin-top:40px;
-  }
-  .logo-box img{
-    width:170px; /* logo büyüklüğü */
-    max-width:80%;
-  }
+.container {
+  max-width:420px;
+  margin:auto;
+  padding:20px;
+  text-align:center;
+}
 
-  /* butonları tutan alan */
-  .menu{
-    margin-top:30px;
-  }
-  .menu a{
-    display:block;
-    width:85%;
-    max-width:400px;
-    margin:14px auto;
-    padding:18px;
-    background:#2a9450; /* koyu yeşil */
-    color:white;
-    text-decoration:none;
-    font-size:18px;
-    font-weight:600;
-    border-radius:12px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  }
-  .menu a:hover{
-    background:#208444;
-  }
+.logo {
+  width:140px;
+  margin:20px auto;
+}
 
-  /* iletişim alanı */
-  .footer{
-    margin-top:40px;
-    font-size:14px;
-    color:#333;
-  }
-  .footer div{
-    margin:8px;
-  }
+.btn {
+  display:block;
+  background:#1fb85a;
+  color:white;
+  padding:18px;
+  margin:15px 0;
+  border-radius:40px;
+  font-size:20px;
+  text-decoration:none;
+  font-weight:bold;
+}
 
-  /* küçük ekranlarda ayar */
-  @media(max-width:400px){
-    .menu a{
-      font-size:16px;
-      padding:14px;
-    }
-  }
+.card {
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+
+input, select {
+  width:100%;
+  padding:14px;
+  margin:10px 0;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+.paybtn {
+  background:#1fb85a;
+  color:white;
+  padding:15px;
+  border:none;
+  width:100%;
+  border-radius:30px;
+  font-size:18px;
+}
 </style>
 </head>
 
 <body>
 
-  <div class="logo-box">
-    <!-- logo.png dosyan olmalı repository'de -->
-    <img src="logo.png" alt="Añsatt Logo">
-  </div>
+<div class="container" id="home">
+  <img src="https://i.imgur.com/8fKQw6S.png" class="logo">
+  <a class="btn" onclick="openPay()">💳 Kartdan Telefona</a>
+  <a class="btn" onclick="openPay()">📱 Telefandan Telefona</a>
+  <a class="btn" onclick="openPay()">📡 Wi-Fi & Mobil Balans</a>
 
-  <div class="menu">
-    <!-- Buradaki href'leri kendi ödeme sayfalarına yönlendirebilirsin -->
-    <a href="kart.html">💳 Kartdan Telefona</a>
-    <a href="phone.html">📱 Telefondan Telefona</a>
-    <a href="wifi.html">📡 Wi‑Fi & Mobil Balans</a>
-  </div>
+  <p>📞 +7 902 388-95-02</p>
+  <p>✉ hojayewberdimyrat165@gmail.com</p>
+  <p>WhatsApp · Telegram · VK</p>
+</div>
 
-  <div class="footer">
-    <div>📞 +7 902 388‑95‑02</div>
-    <div>📧 hojayewberdimyrat165@gmail.com</div>
-    <div>WhatsApp · Telegram · VK</div>
+<div class="container" id="pay" style="display:none;">
+  <div class="card">
+    <img src="https://i.imgur.com/8fKQw6S.png" class="logo" style="width:80px">
+    <h2>Añsatt Töleg</h2>
+
+    <input type="text" placeholder="+993 Telefon belgiňiz">
+    <input id="amount" type="number" placeholder="Manat" oninput="calc()">
+
+    <select>
+      <option>🇷🇺 Russiýa (RUB)</option>
+    </select>
+
+    <h3 id="total">Jemi töleg: —</h3>
+
+    <button class="paybtn" onclick="pay()">Töle</button>
   </div>
+</div>
+
+<script>
+function openPay(){
+  document.getElementById("home").style.display="none";
+  document.getElementById("pay").style.display="block";
+}
+
+function calc(){
+  let manat = document.getElementById("amount").value;
+  if(manat>0){
+    let rub = manat * 4.6; // örnek kur
+    document.getElementById("total").innerText = "Jemi töleg: " + rub.toFixed(2) + " RUB";
+  }
+}
+
+function pay(){
+  let manat = document.getElementById("amount").value;
+  if(manat<=0){ alert("Tutar gir"); return; }
+
+  let rub = Math.round(manat * 4.6);
+  let link = "https://www.tinkoff.ru/payments/phone?phone=+79964917041&amount=" + rub;
+  window.location.href = link;
+}
+</script>
 
 </body>
 </html>
