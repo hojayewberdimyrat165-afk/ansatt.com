@@ -5,137 +5,79 @@
 <title>Aňsatt Töleg</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#e9fff4;
-}
-.container{
-  max-width:420px;
-  margin:30px auto;
-  background:#fff;
-  padding:20px;
-  border-radius:20px;
-  box-shadow:0 0 10px rgba(0,0,0,.1);
-  text-align:center;
-}
-.logo{
-  width:90px;
-  margin:10px auto;
-}
-h2{margin:10px 0;}
-input,select{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border-radius:10px;
-  border:1px solid #ccc;
-  font-size:16px;
-}
-.total{
-  font-size:18px;
-  margin:10px 0;
-}
-.btn{
-  background:#24b14c;
-  color:#fff;
-  padding:14px;
-  border:none;
-  width:100%;
-  border-radius:14px;
-  font-size:18px;
-  cursor:pointer;
-}
-.hidden{display:none;}
-.bank-btn{
-  margin:8px 0;
-  background:#0d8c42;
-  color:white;
-  padding:12px;
-  border-radius:12px;
-  text-decoration:none;
-  display:block;
-}
-.back{
-  margin-top:10px;
-  color:#24b14c;
-  cursor:pointer;
-}
+body{margin:0;font-family:Arial;background:#e9fff4}
+.box{max-width:420px;margin:30px auto;background:#fff;padding:20px;border-radius:20px;box-shadow:0 0 10px rgba(0,0,0,.1);text-align:center}
+.logo{width:90px;margin:10px auto}
+input,select{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #ccc;font-size:16px}
+.total{font-size:18px;margin:10px}
+.btn{background:#24b14c;color:#fff;padding:14px;border:none;width:100%;border-radius:14px;font-size:18px}
+.bank{display:block;margin:8px 0;background:#0d8c42;color:white;padding:12px;border-radius:12px;text-decoration:none}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 
-<div class="container" id="step1">
+<div class="box" id="step1">
   <img src="https://raw.githubusercontent.com/hojayewberdimyrat165-afk/ansatt.com/main/logo.png" class="logo">
   <h2>Aňsatt Töleg</h2>
 
-  <input type="tel" id="phone" placeholder="+993 Telefon belgiňiz">
+  <input type="tel" placeholder="+993 Telefon belgiňiz">
   <input type="number" id="amount" placeholder="Manat" oninput="calc()">
-
-  <select id="country" onchange="calc()">
-    <option value="ru">🇷🇺 Russiýa (RUB)</option>
-    <option value="tr">🇹🇷 Türkiýe (TL)</option>
-  </select>
 
   <div class="total">Jemi töleg: <b id="total">—</b></div>
   <button class="btn" onclick="next()">Töle</button>
 </div>
 
-<div class="container hidden" id="step2">
+<div class="box hidden" id="step2">
   <h2>Banka saýlaň</h2>
 
-  <div id="ruBanks">
-    <a class="bank-btn" href="https://www.tinkoff.ru" target="_blank">Tinkoff</a>
-    <a class="bank-btn" href="https://www.sberbank.ru" target="_blank">Sber</a>
-    <a class="bank-btn" href="https://sbp.nspk.ru" target="_blank">SBP</a>
-  </div>
+  <a class="bank" onclick="pay('tinkoff')">Tinkoff</a>
+  <a class="bank" onclick="pay('sber')">Sberbank</a>
+  <a class="bank" onclick="pay('sbp')">SBP (Hızlı)</a>
 
-  <div id="trBanks" class="hidden">
-    <a class="bank-btn" href="iban.html">IBAN</a>
-    <a class="bank-btn" href="papara.html">Papara</a>
-  </div>
-
-  <div class="back" onclick="back()">← Yza</div>
+  <div style="margin-top:10px;color:#24b14c;cursor:pointer" onclick="back()">← Yza</div>
 </div>
 
 <script>
-const rateRUB = 4.5;   // 1 manat → rub
-const rateTL  = 0.9;   // 1 manat → tl
+const rate = 4.5; // 1 manat = 4.5 RUB
 const commission = 0.03;
+let lastRub = 0;
 
 function calc(){
   let m = document.getElementById("amount").value;
-  let c = document.getElementById("country").value;
-  if(!m){ document.getElementById("total").innerText="—"; return; }
-
-  let res = c==="ru" ? m*rateRUB : m*rateTL;
-  res = res + (res*commission);
-
-  document.getElementById("total").innerText =
-    res.toFixed(2) + (c==="ru"?" RUB":" TL");
+  if(!m){ total.innerText="—"; return;}
+  let rub = m*rate;
+  rub = rub + rub*commission;
+  lastRub = Math.round(rub);
+  total.innerText = lastRub + " RUB";
 }
 
 function next(){
   let m=document.getElementById("amount").value;
-  if(!m){ alert("Manat giriz"); return; }
-
-  document.getElementById("step1").classList.add("hidden");
-  document.getElementById("step2").classList.remove("hidden");
-
-  let c=document.getElementById("country").value;
-  if(c==="ru"){
-    document.getElementById("ruBanks").classList.remove("hidden");
-    document.getElementById("trBanks").classList.add("hidden");
-  }else{
-    document.getElementById("trBanks").classList.remove("hidden");
-    document.getElementById("ruBanks").classList.add("hidden");
-  }
+  if(!m){ alert("Manat giriz"); return;}
+  step1.classList.add("hidden");
+  step2.classList.remove("hidden");
 }
 
 function back(){
-  document.getElementById("step2").classList.add("hidden");
-  document.getElementById("step1").classList.remove("hidden");
+  step2.classList.add("hidden");
+  step1.classList.remove("hidden");
+}
+
+function pay(bank){
+  let phone="+79964917041";
+  let link="";
+  if(bank==="tinkoff"){
+    link="https://www.tinkoff.ru/payments/phone?phone="+phone+"&amount="+lastRub;
+  }
+  if(bank==="sber"){
+    link="https://online.sberbank.ru/CSAFront/payOrder.do?phone="+phone+"&amount="+lastRub;
+  }
+  if(bank==="sbp"){
+    link="https://sbp.nspk.ru/pay?phone="+phone+"&amount="+lastRub;
+  }
+  window.location.href = link;
 }
 </script>
 
