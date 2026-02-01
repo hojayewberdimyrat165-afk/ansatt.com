@@ -2,119 +2,140 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Añsatt</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aňsatt Töleg</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body {
+body{
   margin:0;
-  font-family: Arial, sans-serif;
-  background:#e9fff5;
+  font-family:Arial,sans-serif;
+  background:#e9fff4;
 }
-
-.container {
+.container{
   max-width:420px;
-  margin:auto;
+  margin:30px auto;
+  background:#fff;
   padding:20px;
+  border-radius:20px;
+  box-shadow:0 0 10px rgba(0,0,0,.1);
   text-align:center;
 }
-
-.logo {
-  width:140px;
-  margin:20px auto;
+.logo{
+  width:90px;
+  margin:10px auto;
 }
-
-.btn {
-  display:block;
-  background:#1fb85a;
-  color:white;
-  padding:18px;
-  margin:15px 0;
-  border-radius:40px;
-  font-size:20px;
-  text-decoration:none;
-  font-weight:bold;
-}
-
-.card {
-  background:white;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 0 15px rgba(0,0,0,0.1);
-}
-
-input, select {
+h2{margin:10px 0;}
+input,select{
   width:100%;
-  padding:14px;
-  margin:10px 0;
+  padding:12px;
+  margin:8px 0;
   border-radius:10px;
   border:1px solid #ccc;
   font-size:16px;
 }
-
-.paybtn {
-  background:#1fb85a;
-  color:white;
-  padding:15px;
+.total{
+  font-size:18px;
+  margin:10px 0;
+}
+.btn{
+  background:#24b14c;
+  color:#fff;
+  padding:14px;
   border:none;
   width:100%;
-  border-radius:30px;
+  border-radius:14px;
   font-size:18px;
+  cursor:pointer;
+}
+.hidden{display:none;}
+.bank-btn{
+  margin:8px 0;
+  background:#0d8c42;
+  color:white;
+  padding:12px;
+  border-radius:12px;
+  text-decoration:none;
+  display:block;
+}
+.back{
+  margin-top:10px;
+  color:#24b14c;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container" id="home">
-  <img src="https://i.imgur.com/8fKQw6S.png" class="logo">
-  <a class="btn" onclick="openPay()">💳 Kartdan Telefona</a>
-  <a class="btn" onclick="openPay()">📱 Telefandan Telefona</a>
-  <a class="btn" onclick="openPay()">📡 Wi-Fi & Mobil Balans</a>
+<div class="container" id="step1">
+  <img src="https://raw.githubusercontent.com/hojayewberdimyrat165-afk/ansatt.com/main/logo.png" class="logo">
+  <h2>Aňsatt Töleg</h2>
 
-  <p>📞 +7 902 388-95-02</p>
-  <p>✉ hojayewberdimyrat165@gmail.com</p>
-  <p>WhatsApp · Telegram · VK</p>
+  <input type="tel" id="phone" placeholder="+993 Telefon belgiňiz">
+  <input type="number" id="amount" placeholder="Manat" oninput="calc()">
+
+  <select id="country" onchange="calc()">
+    <option value="ru">🇷🇺 Russiýa (RUB)</option>
+    <option value="tr">🇹🇷 Türkiýe (TL)</option>
+  </select>
+
+  <div class="total">Jemi töleg: <b id="total">—</b></div>
+  <button class="btn" onclick="next()">Töle</button>
 </div>
 
-<div class="container" id="pay" style="display:none;">
-  <div class="card">
-    <img src="https://i.imgur.com/8fKQw6S.png" class="logo" style="width:80px">
-    <h2>Añsatt Töleg</h2>
+<div class="container hidden" id="step2">
+  <h2>Banka saýlaň</h2>
 
-    <input type="text" placeholder="+993 Telefon belgiňiz">
-    <input id="amount" type="number" placeholder="Manat" oninput="calc()">
-
-    <select>
-      <option>🇷🇺 Russiýa (RUB)</option>
-    </select>
-
-    <h3 id="total">Jemi töleg: —</h3>
-
-    <button class="paybtn" onclick="pay()">Töle</button>
+  <div id="ruBanks">
+    <a class="bank-btn" href="https://www.tinkoff.ru" target="_blank">Tinkoff</a>
+    <a class="bank-btn" href="https://www.sberbank.ru" target="_blank">Sber</a>
+    <a class="bank-btn" href="https://sbp.nspk.ru" target="_blank">SBP</a>
   </div>
+
+  <div id="trBanks" class="hidden">
+    <a class="bank-btn" href="iban.html">IBAN</a>
+    <a class="bank-btn" href="papara.html">Papara</a>
+  </div>
+
+  <div class="back" onclick="back()">← Yza</div>
 </div>
 
 <script>
-function openPay(){
-  document.getElementById("home").style.display="none";
-  document.getElementById("pay").style.display="block";
-}
+const rateRUB = 4.5;   // 1 manat → rub
+const rateTL  = 0.9;   // 1 manat → tl
+const commission = 0.03;
 
 function calc(){
-  let manat = document.getElementById("amount").value;
-  if(manat>0){
-    let rub = manat * 4.6; // örnek kur
-    document.getElementById("total").innerText = "Jemi töleg: " + rub.toFixed(2) + " RUB";
+  let m = document.getElementById("amount").value;
+  let c = document.getElementById("country").value;
+  if(!m){ document.getElementById("total").innerText="—"; return; }
+
+  let res = c==="ru" ? m*rateRUB : m*rateTL;
+  res = res + (res*commission);
+
+  document.getElementById("total").innerText =
+    res.toFixed(2) + (c==="ru"?" RUB":" TL");
+}
+
+function next(){
+  let m=document.getElementById("amount").value;
+  if(!m){ alert("Manat giriz"); return; }
+
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.remove("hidden");
+
+  let c=document.getElementById("country").value;
+  if(c==="ru"){
+    document.getElementById("ruBanks").classList.remove("hidden");
+    document.getElementById("trBanks").classList.add("hidden");
+  }else{
+    document.getElementById("trBanks").classList.remove("hidden");
+    document.getElementById("ruBanks").classList.add("hidden");
   }
 }
 
-function pay(){
-  let manat = document.getElementById("amount").value;
-  if(manat<=0){ alert("Tutar gir"); return; }
-
-  let rub = Math.round(manat * 4.6);
-  let link = "https://www.tinkoff.ru/payments/phone?phone=+79964917041&amount=" + rub;
-  window.location.href = link;
+function back(){
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("step1").classList.remove("hidden");
 }
 </script>
 
